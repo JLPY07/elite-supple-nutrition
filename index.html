@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo de Suplementos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0c0a;
+    --panel:#171410;
+    --panel-2:#1e1a14;
+    --gold:#ee5a24;
+    --gold-light:#ff8a5c;
+    --text:#f2eee3;
+    --muted:#9a9184;
+    --border:#2a2620;
+    --danger:#b3432f;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Work Sans',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Anton',sans-serif;
+    letter-spacing:0.5px;
+    line-height:1.05;
+    font-weight:400;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(13,12,10,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  .header-inner{
+    max-width:1100px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px;
+    gap:16px;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-mark-img{
+    width:38px;height:38px;border-radius:50%;
+    object-fit:cover; border:1px solid var(--border);
+  }
+  .brand-name{font-family:'Anton',sans-serif; font-size:18px; letter-spacing:0.5px;}
+  .header-right{display:flex; align-items:center; gap:10px;}
+
+  .currency-toggle{
+    display:flex; background:var(--panel); border:1px solid var(--border);
+    border-radius:999px; padding:3px; gap:2px;
+  }
+  .currency-toggle button{
+    border:none; background:transparent; color:var(--muted);
+    padding:6px 12px; border-radius:999px; font-size:13px; font-weight:600;
+    cursor:pointer; font-family:'Work Sans',sans-serif;
+  }
+  .currency-toggle button.active{
+    background:var(--gold); color:#191510;
+  }
+
+  .cart-btn{
+    position:relative;
+    background:var(--panel); border:1px solid var(--border);
+    color:var(--text); padding:9px 14px; border-radius:999px;
+    display:flex; align-items:center; gap:8px; cursor:pointer;
+    font-family:'Work Sans',sans-serif; font-weight:600; font-size:14px;
+  }
+  .cart-btn:hover{border-color:var(--gold);}
+  .cart-count{
+    background:var(--gold); color:#191510; font-size:11px; font-weight:700;
+    min-width:18px; height:18px; border-radius:999px;
+    display:flex; align-items:center; justify-content:center; padding:0 4px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    max-width:1100px; margin:0 auto; padding:56px 20px 32px;
+  }
+  .hero h1{font-size:clamp(36px,7vw,64px); margin:0 0 6px;}
+  .hero h1 .accent{color:var(--gold);}
+  .hero p{color:var(--muted); font-size:16px; max-width:520px; margin:0 0 24px;}
+  .badges{display:flex; flex-wrap:wrap; gap:14px;}
+  .badge{
+    display:flex; align-items:center; gap:8px;
+    background:var(--panel); border:1px solid var(--border);
+    padding:10px 14px; border-radius:10px; font-size:13px; color:var(--muted);
+  }
+  .badge b{color:var(--text);}
+  .currency-note{font-size:12px; color:var(--muted); margin-top:14px;}
+
+  /* ---------- Category nav ---------- */
+  .cat-nav{
+    max-width:1100px; margin:0 auto; padding:0 20px 8px;
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .cat-nav a{
+    text-decoration:none; font-size:13px; font-weight:600;
+    color:var(--muted); border:1px solid var(--border);
+    padding:8px 14px; border-radius:999px;
+  }
+  .cat-nav a:hover{color:var(--gold); border-color:var(--gold);}
+
+  /* ---------- Sections ---------- */
+  .category-section{max-width:1100px; margin:0 auto; padding:40px 20px 10px;}
+  .category-title{
+    display:flex; align-items:center; gap:12px; margin-bottom:20px;
+  }
+  .category-title h2{font-size:24px; margin:0;}
+  .category-title .line{flex:1; height:1px; background:var(--border);}
+
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:18px;
+  }
+  .card{
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:14px; overflow:hidden; display:flex; flex-direction:column;
+  }
+  .card-media{
+    height:150px; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .card-body{padding:16px; display:flex; flex-direction:column; gap:10px; flex:1;}
+  .card-name{font-size:14.5px; font-weight:600; line-height:1.3; min-height:38px;}
+  .card-prices{margin-top:auto;}
+  .price-main{font-family:'Anton',sans-serif; font-size:20px; color:var(--gold-light);}
+  .price-sub{font-size:12px; color:var(--muted);}
+  .add-btn{
+    margin-top:6px; border:1px solid var(--gold); background:transparent;
+    color:var(--gold-light); padding:9px; border-radius:8px; font-weight:700;
+    cursor:pointer; font-size:13px; font-family:'Work Sans',sans-serif;
+    transition:background .15s ease, color .15s ease;
+  }
+  .add-btn:hover{background:var(--gold); color:#191510;}
+  .add-btn.added{background:var(--gold); color:#191510;}
+
+  /* icon svgs share this wrapper */
+  .icon-wrap svg{width:64px;height:64px;}
+
+  /* ---------- Footer ---------- */
+  footer{
+    max-width:1100px; margin:56px auto 0; padding:28px 20px 40px;
+    border-top:1px solid var(--border);
+    display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between; align-items:center;
+  }
+  .footer-note{color:var(--muted); font-size:13px;}
+  .wa-link{
+    display:inline-flex; align-items:center; gap:8px;
+    color:var(--gold-light); font-weight:700; text-decoration:none; font-size:14px;
+  }
+
+  /* ---------- Floating WhatsApp ---------- */
+  .fab{
+    position:fixed; right:20px; bottom:20px; z-index:60;
+    background:#25D366; color:#fff; width:56px; height:56px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(0,0,0,0.4); text-decoration:none;
+  }
+
+  /* ---------- Cart Drawer ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.55);
+    opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:70;
+  }
+  .overlay.open{opacity:1; pointer-events:auto;}
+  .drawer{
+    position:fixed; top:0; right:0; height:100%; width:380px; max-width:92vw;
+    background:var(--panel-2); border-left:1px solid var(--border);
+    transform:translateX(100%); transition:transform .25s ease; z-index:80;
+    display:flex; flex-direction:column;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-header{
+    padding:18px 20px; border-bottom:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .drawer-header h3{margin:0; font-size:18px;}
+  .close-btn{background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer;}
+  .drawer-items{flex:1; overflow-y:auto; padding:10px 20px;}
+  .empty-cart{color:var(--muted); font-size:14px; text-align:center; padding:40px 0;}
+  .cart-item{
+    display:flex; gap:12px; padding:14px 0; border-bottom:1px solid var(--border);
+  }
+  .cart-item-name{font-size:13.5px; font-weight:600; margin-bottom:4px;}
+  .cart-item-price{font-size:12.5px; color:var(--muted);}
+  .qty-controls{display:flex; align-items:center; gap:8px; margin-top:8px;}
+  .qty-controls button{
+    width:24px; height:24px; border-radius:6px; border:1px solid var(--border);
+    background:var(--panel); color:var(--text); cursor:pointer; font-size:14px;
+  }
+  .remove-btn{
+    margin-left:auto; background:none; border:none; color:var(--danger);
+    font-size:12px; cursor:pointer; text-decoration:underline;
+  }
+  .drawer-footer{
+    padding:18px 20px; border-top:1px solid var(--border);
+  }
+  .total-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-bottom:14px;
+  }
+  .total-row span:first-child{color:var(--muted); font-size:14px;}
+  .total-row .total-amount{font-family:'Anton',sans-serif; font-size:22px; color:var(--gold-light);}
+  .checkout-btn{
+    width:100%; background:#25D366; color:#fff; border:none;
+    padding:14px; border-radius:10px; font-weight:700; font-size:15px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .checkout-btn:disabled{opacity:0.4; cursor:not-allowed;}
+
+  @media (max-width:520px){
+    .header-inner{flex-wrap:wrap;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <img src="assets/logo.jpeg" alt="Elite Supple Nutrition" class="brand-mark-img">
+      <div class="brand-name">ELITE <span style="color:var(--gold)">SUPPLE</span></div>
+    </div>
+    <div class="header-right">
+      <div class="currency-toggle" id="currencyToggle">
+        <button data-currency="PYG">₲ Gs</button>
+        <button data-currency="BRL">R$ Real</button>
+      </div>
+      <button class="cart-btn" id="openCartBtn">
+        🛒 Carrito <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>ELITE SUPPLE<br><span class="accent">NUTRITION</span></h1>
+  <p>Productos originales para tu entrenamiento. Elegí, armá tu pedido y confirmalo directo por WhatsApp.</p>
+  <div class="badges">
+    <div class="badge">✅ <b>100% originales</b></div>
+    <div class="badge">📦 <b>Por pedido</b></div>
+    <div class="badge">🚚 <b>Entrega en 3 a 5 días hábiles</b></div>
+  </div>
+  <div class="currency-note" id="currencyNote"></div>
+</section>
+
+<nav class="cat-nav">
+  <a href="#creatinas">Creatinas</a>
+  <a href="#whey">Whey Protein</a>
+  <a href="#pre-entrenos">Pré-Entrenos</a>
+  <a href="#vitaminas">Vitaminas</a>
+</nav>
+
+<div id="categories"></div>
+
+<a class="fab" id="fabWhatsapp" href="#" target="_blank" rel="noopener" title="Consultar por WhatsApp">
+  <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39a9.9 9.9 0 0 0 4.75 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8a8.1 8.1 0 0 1 8.1 8.11c0 4.47-3.63 8.1-8.1 8.1a8 8 0 0 1-4.1-1.12l-.29-.17-3.14.83.84-3.06-.19-.31a8.02 8.02 0 0 1-1.22-4.27 8.1 8.1 0 0 1 8.1-8.11m-4.38 4.15c-.15 0-.4.06-.62.3-.21.24-.82.8-.82 1.94s.83 2.24.95 2.4c.11.15 1.62 2.55 4 3.48 1.98.78 2.38.62 2.81.58.43-.04 1.38-.56 1.58-1.11.19-.54.19-1 .13-1.1-.06-.1-.22-.16-.46-.28-.24-.12-1.38-.68-1.6-.76-.21-.08-.37-.12-.53.12-.15.24-.6.76-.74.92-.14.16-.27.18-.51.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.35-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.53-1.3-.74-1.77-.19-.46-.39-.4-.53-.4Z"/></svg>
+</a>
+
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <h3>Tu pedido</h3>
+    <button class="close-btn" id="closeDrawerBtn">✕</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-footer">
+    <div class="total-row">
+      <span>Total</span>
+      <span class="total-amount" id="totalAmount">Gs. 0</span>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn" disabled>
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39a9.9 9.9 0 0 0 4.75 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8a8.1 8.1 0 0 1 8.1 8.11c0 4.47-3.63 8.1-8.1 8.1a8 8 0 0 1-4.1-1.12l-.29-.17-3.14.83.84-3.06-.19-.31a8.02 8.02 0 0 1-1.22-4.27 8.1 8.1 0 0 1 8.1-8.11m-4.38 4.15c-.15 0-.4.06-.62.3-.21.24-.82.8-.82 1.94s.83 2.24.95 2.4c.11.15 1.62 2.55 4 3.48 1.98.78 2.38.62 2.81.58.43-.04 1.38-.56 1.58-1.11.19-.54.19-1 .13-1.1-.06-.1-.22-.16-.46-.28-.24-.12-1.38-.68-1.6-.76-.21-.08-.37-.12-.53.12-.15.24-.6.76-.74.92-.14.16-.27.18-.51.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.35-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.53-1.3-.74-1.77-.19-.46-.39-.4-.53-.4Z"/></svg>
+      Finalizar pedido por WhatsApp
+    </button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-note">Elite Supple Nutrition — suplementos que te acercan a tu mejor versión.</div>
+  <a class="wa-link" href="#" id="footerWhatsapp" target="_blank" rel="noopener">📱 +595 994 797 121 — Consultá y hacé tu pedido</a>
+</footer>
+
+<script>
+/* =========================================================================
+   CONFIGURACIÓN DEL NEGOCIO
+   Todo lo que tu amigo necesite cambiar (número, productos, precios,
+   tipo de cambio) está acá arriba, en un solo lugar.
+   ========================================================================= */
+
+// Número de WhatsApp SIN el "+" y sin espacios (formato que pide wa.me)
+const WHATSAPP_NUMBER = "595994797121";
+
+// Cuántos guaraníes vale 1 real brasileño hoy.
+// Esto cambia día a día: lo ideal a futuro es traerlo de una API de cambio,
+// por ahora es una constante que tu amigo puede actualizar a mano.
+const PYG_PER_BRL = 1180;
+
+// Catálogo de productos. Para agregar uno nuevo, copiá un objeto y cambiá
+// los datos. El precio SIEMPRE se carga en guaraníes (price); el real se
+// calcula solo con PYG_PER_BRL.
+const PRODUCTS = [
+  { id:"cre-max300",        category:"Creatinas",    icon:"jar",  name:"Creatina Monohidratada Max Titanium 300g", price:180000 },
+  { id:"cre-growth250",     category:"Creatinas",    icon:"jar",  name:"Creatina Monohidratada Growth 250g", price:75000 },
+  { id:"cre-soldiers600",   category:"Creatinas",    icon:"pouch",name:"Creatina 600g Soldiers Nutrition 100% Pura", price:100000 },
+  { id:"pre-panic150",      category:"Pré-Entrenos", icon:"pouch",name:"Adaptogen Science Panic Pré Entreno con Creatina 150g", price:75000 },
+  { id:"pre-haze300",       category:"Pré-Entrenos", icon:"pouch",name:"Pré Entreno Haze Hardcore 300g Growth", price:160000 },
+  { id:"why-basic1kg",      category:"Whey Protein", icon:"pouch",name:"Basic Whey 1kg Growth Supplements", price:130000 },
+  { id:"why-growth80-1kg",  category:"Whey Protein", icon:"pouch",name:"Whey Protein Concentrado 80% 1kg Growth Supplements", price:370000 },
+  { id:"why-primal1kg",     category:"Whey Protein", icon:"pouch",name:"Whey Protein Primal 1kg Soldiers Nutrition", price:160000 },
+  { id:"why-soldiers1kg",   category:"Whey Protein", icon:"pouch",name:"Whey Protein Concentrado 1kg Soldiers Nutrition", price:400000 },
+  { id:"why-maxtitanium900",category:"Whey Protein", icon:"jar",  name:"100% Whey Protein Concentrado 900g Max Titanium", price:280000 },
+
+  // Vitaminas Growth: precio en 0 = "a consultar" hasta que carguen el precio real.
+  // Apenas tengan el precio, solo hay que cambiar el 0 por el número en guaraníes
+  // y el producto pasa a mostrarse con precio + botón "Agregar al carrito" solo.
+  { id:"vit-omega3",     category:"Vitaminas", icon:"jar", name:"Omega 3 Growth Supplements", price:0 },
+  { id:"vit-multi",      category:"Vitaminas", icon:"jar", name:"Multivitamínico Growth Supplements", price:0 },
+  { id:"vit-zinc",       category:"Vitaminas", icon:"jar", name:"Zinc Growth Supplements", price:0 },
+  { id:"vit-colageno",   category:"Vitaminas", icon:"jar", name:"Colágeno Growth Supplements", price:0 },
+  { id:"vit-enzimas",    category:"Vitaminas", icon:"jar", name:"Enzimas Digestivas Growth Supplements", price:0 },
+  { id:"vit-melatonina", category:"Vitaminas", icon:"jar", name:"Melatonina Growth Supplements", price:0 }
+];
+
+// Orden en que se muestran las categorías, y su id de sección (para el menú)
+const CATEGORY_ORDER = [
+  { name:"Creatinas",    slug:"creatinas" },
+  { name:"Whey Protein", slug:"whey" },
+  { name:"Pré-Entrenos", slug:"pre-entrenos" },
+  { name:"Vitaminas",    slug:"vitaminas" }
+];
+
+/* =========================================================================
+   ESTADO DE LA APP
+   ========================================================================= */
+let currency = detectDefaultCurrency(); // "PYG" o "BRL"
+let cart = {}; // { productId: cantidad }
+
+/* =========================================================================
+   DETECCIÓN DE MONEDA (heurística, no 100% exacta a propósito)
+   Miramos el huso horario / idioma del navegador. Si parece Brasil,
+   arrancamos en reales. Si no, en guaraníes. El usuario SIEMPRE puede
+   tocar el switch de arriba para cambiarlo manualmente.
+   ========================================================================= */
+function detectDefaultCurrency(){
+  try{
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+    if (tz.includes("Sao_Paulo") || tz.includes("Brazil")) return "BRL";
+  }catch(e){ /* ignorar si el navegador no soporta Intl */ }
+  const lang = (navigator.language || "").toLowerCase();
+  if (lang.startsWith("pt")) return "BRL";
+  return "PYG";
+}
+
+/* =========================================================================
+   FORMATO DE PRECIOS
+   ========================================================================= */
+function toBRL(pygPrice){
+  return pygPrice / PYG_PER_BRL;
+}
+function formatPYG(n){
+  return "Gs. " + Math.round(n).toLocaleString("es-PY");
+}
+function formatBRL(n){
+  return "R$ " + n.toLocaleString("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function formatPrice(pygPrice){
+  return currency === "BRL" ? formatBRL(toBRL(pygPrice)) : formatPYG(pygPrice);
+}
+function formatSecondaryPrice(pygPrice){
+  return currency === "BRL" ? formatPYG(pygPrice) : formatBRL(toBRL(pygPrice));
+}
+
+/* =========================================================================
+   ICONOS (SVG simples por categoría, para no depender de fotos reales.
+   Tu amigo puede reemplazar el <svg> de renderIcon() por un <img> con
+   la foto real de cada producto más adelante)
+   ========================================================================= */
+function renderIcon(type){
+  if(type === "jar"){
+    return `<svg viewBox="0 0 64 64"><rect x="16" y="10" width="32" height="8" rx="2" fill="#e8c468"/><rect x="14" y="18" width="36" height="36" rx="6" fill="#c9a227"/><rect x="14" y="18" width="36" height="10" fill="#171410" opacity="0.25"/></svg>`;
+  }
+  return `<svg viewBox="0 0 64 64"><path d="M18 8h28l4 10v34a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V18Z" fill="#c9a227"/><path d="M18 8h28l3 8H15Z" fill="#e8c468"/></svg>`;
+}
+
+/* =========================================================================
+   RENDER: catálogo
+   ========================================================================= */
+function renderCatalog(){
+  const container = document.getElementById("categories");
+  container.innerHTML = "";
+  CATEGORY_ORDER.forEach(cat => {
+    const items = PRODUCTS.filter(p => p.category === cat.name);
+    if(items.length === 0) return;
+
+    const section = document.createElement("section");
+    section.className = "category-section";
+    section.id = cat.slug;
+    section.innerHTML = `
+      <div class="category-title"><h2>${cat.name}</h2><div class="line"></div></div>
+      <div class="grid">
+        ${items.map(p => `
+          <div class="card">
+            <div class="card-media icon-wrap">${renderIcon(p.icon)}</div>
+            <div class="card-body">
+              <div class="card-name">${p.name}</div>
+              ${p.price > 0 ? `
+                <div class="card-prices">
+                  <div class="price-main">${formatPrice(p.price)}</div>
+                  <div class="price-sub">${formatSecondaryPrice(p.price)}</div>
+                </div>
+                <button class="add-btn" data-id="${p.id}">Agregar al carrito</button>
+              ` : `
+                <div class="card-prices">
+                  <div class="price-main" style="font-size:14px;color:var(--muted)">Consultar precio</div>
+                </div>
+                <button class="add-btn" data-consult="${p.name}">Consultar por WhatsApp</button>
+              `}
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+    container.appendChild(section);
+  });
+
+  container.querySelectorAll(".add-btn[data-id]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      addToCart(btn.getAttribute("data-id"));
+      btn.textContent = "¡Agregado! ✓";
+      btn.classList.add("added");
+      setTimeout(() => { btn.textContent = "Agregar al carrito"; btn.classList.remove("added"); }, 900);
+    });
+  });
+
+  container.querySelectorAll(".add-btn[data-consult]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const productName = btn.getAttribute("data-consult");
+      const msg = encodeURIComponent(`¡Hola! Quiero consultar el precio de: ${productName}`);
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
+    });
+  });
+}
+
+/* =========================================================================
+   CARRITO
+   ========================================================================= */
+function addToCart(id){
+  cart[id] = (cart[id] || 0) + 1;
+  renderCart();
+}
+function changeQty(id, delta){
+  if(!cart[id]) return;
+  cart[id] += delta;
+  if(cart[id] <= 0) delete cart[id];
+  renderCart();
+}
+function removeFromCart(id){
+  delete cart[id];
+  renderCart();
+}
+function cartTotalPYG(){
+  return Object.entries(cart).reduce((sum, [id, qty]) => {
+    const p = PRODUCTS.find(pr => pr.id === id);
+    return sum + (p ? p.price * qty : 0);
+  }, 0);
+}
+function cartItemCount(){
+  return Object.values(cart).reduce((a,b) => a+b, 0);
+}
+
+function renderCart(){
+  const itemsEl = document.getElementById("drawerItems");
+  const countEl = document.getElementById("cartCount");
+  const totalEl = document.getElementById("totalAmount");
+  const checkoutBtn = document.getElementById("checkoutBtn");
+
+  countEl.textContent = cartItemCount();
+
+  const ids = Object.keys(cart);
+  if(ids.length === 0){
+    itemsEl.innerHTML = `<div class="empty-cart">Tu carrito está vacío.<br>Agregá productos del catálogo.</div>`;
+    checkoutBtn.disabled = true;
+  } else {
+    itemsEl.innerHTML = ids.map(id => {
+      const p = PRODUCTS.find(pr => pr.id === id);
+      const qty = cart[id];
+      return `
+        <div class="cart-item">
+          <div style="flex:1">
+            <div class="cart-item-name">${p.name}</div>
+            <div class="cart-item-price">${formatPrice(p.price)} c/u</div>
+            <div class="qty-controls">
+              <button data-action="dec" data-id="${id}">−</button>
+              <span>${qty}</span>
+              <button data-action="inc" data-id="${id}">+</button>
+              <button class="remove-btn" data-action="remove" data-id="${id}">Quitar</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+    checkoutBtn.disabled = false;
+  }
+
+  totalEl.textContent = formatPrice(cartTotalPYG());
+
+  itemsEl.querySelectorAll("button[data-action]").forEach(btn => {
+    const id = btn.getAttribute("data-id");
+    const action = btn.getAttribute("data-action");
+    btn.addEventListener("click", () => {
+      if(action === "inc") changeQty(id, 1);
+      if(action === "dec") changeQty(id, -1);
+      if(action === "remove") removeFromCart(id);
+    });
+  });
+}
+
+/* =========================================================================
+   CHECKOUT POR WHATSAPP
+   Arma un mensaje prolijo con el pedido y abre WhatsApp con ese texto
+   ya cargado. El cliente solo tiene que apretar "Enviar".
+   ========================================================================= */
+function buildOrderMessage(){
+  const lines = ["¡Hola! Quiero hacer un pedido desde la web:", ""];
+  Object.entries(cart).forEach(([id, qty]) => {
+    const p = PRODUCTS.find(pr => pr.id === id);
+    lines.push(`• ${p.name} x${qty} — ${formatPrice(p.price * qty)}`);
+  });
+  lines.push("");
+  lines.push(`Total: ${formatPrice(cartTotalPYG())}`);
+  lines.push("");
+  lines.push("Mi nombre: ");
+  lines.push("Mi ciudad: ");
+  return lines.join("\n");
+}
+function checkout(){
+  const message = buildOrderMessage();
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank");
+}
+
+/* =========================================================================
+   UI: drawer, overlay, toggle de moneda, botones flotantes
+   ========================================================================= */
+function openDrawer(){
+  document.getElementById("drawer").classList.add("open");
+  document.getElementById("overlay").classList.add("open");
+}
+function closeDrawer(){
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("overlay").classList.remove("open");
+}
+
+function setCurrency(newCurrency){
+  currency = newCurrency;
+  document.querySelectorAll(".currency-toggle button").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-currency") === currency);
+  });
+  renderCatalog();
+  renderCart();
+}
+
+function updateCurrencyNote(){
+  const note = document.getElementById("currencyNote");
+  note.textContent = currency === "BRL"
+    ? "Detectamos que podrías estar en Brasil — mostrando precios en reales. Cambiá a Gs. arriba si preferís."
+    : "Mostrando precios en guaraníes. Si venís de Brasil, tocá \"R$ Real\" arriba.";
+}
+
+function setupGeneralWhatsappLinks(){
+  const genericMsg = encodeURIComponent("¡Hola! Quiero consultar sobre sus suplementos.");
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${genericMsg}`;
+  document.getElementById("fabWhatsapp").href = url;
+  document.getElementById("footerWhatsapp").href = url;
+}
+
+/* =========================================================================
+   INIT
+   ========================================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".currency-toggle button").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-currency") === currency);
+    btn.addEventListener("click", () => setCurrency(btn.getAttribute("data-currency")));
+  });
+
+  document.getElementById("openCartBtn").addEventListener("click", openDrawer);
+  document.getElementById("closeDrawerBtn").addEventListener("click", closeDrawer);
+  document.getElementById("overlay").addEventListener("click", closeDrawer);
+  document.getElementById("checkoutBtn").addEventListener("click", checkout);
+
+  setupGeneralWhatsappLinks();
+  updateCurrencyNote();
+  renderCatalog();
+  renderCart();
+});
+</script>
+</body>
+</html>
