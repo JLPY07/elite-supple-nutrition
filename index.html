@@ -148,6 +148,9 @@
 
   /* icon svgs share this wrapper */
   .icon-wrap svg{width:64px;height:64px;}
+  .product-photo{
+    width:100%; height:100%; object-fit:contain; padding:12px;
+  }
 
   /* ---------- Footer ---------- */
   footer{
@@ -312,26 +315,26 @@ const PYG_PER_BRL = 1180;
 // los datos. El precio SIEMPRE se carga en guaraníes (price); el real se
 // calcula solo con PYG_PER_BRL.
 const PRODUCTS = [
-  { id:"cre-max300",        category:"Creatinas",    icon:"jar",  name:"Creatina Monohidratada Max Titanium 300g", price:180000 },
-  { id:"cre-growth250",     category:"Creatinas",    icon:"jar",  name:"Creatina Monohidratada Growth 250g", price:75000 },
-  { id:"cre-soldiers600",   category:"Creatinas",    icon:"pouch",name:"Creatina 600g Soldiers Nutrition 100% Pura", price:100000 },
-  { id:"pre-panic150",      category:"Pré-Entrenos", icon:"pouch",name:"Adaptogen Science Panic Pré Entreno con Creatina 150g", price:75000 },
-  { id:"pre-haze300",       category:"Pré-Entrenos", icon:"pouch",name:"Pré Entreno Haze Hardcore 300g Growth", price:160000 },
-  { id:"why-basic1kg",      category:"Whey Protein", icon:"pouch",name:"Basic Whey 1kg Growth Supplements", price:130000 },
-  { id:"why-growth80-1kg",  category:"Whey Protein", icon:"pouch",name:"Whey Protein Concentrado 80% 1kg Growth Supplements", price:370000 },
-  { id:"why-primal1kg",     category:"Whey Protein", icon:"pouch",name:"Whey Protein Primal 1kg Soldiers Nutrition", price:160000 },
-  { id:"why-soldiers1kg",   category:"Whey Protein", icon:"pouch",name:"Whey Protein Concentrado 1kg Soldiers Nutrition", price:400000 },
-  { id:"why-maxtitanium900",category:"Whey Protein", icon:"jar",  name:"100% Whey Protein Concentrado 900g Max Titanium", price:280000 },
+  { id:"cre-max300",        category:"Creatinas",    icon:"jar",  image:"assets/cre-max300.png",       name:"Creatina Monohidratada Max Titanium 300g", price:180000 },
+  { id:"cre-growth250",     category:"Creatinas",    icon:"jar",  image:"assets/cre-growth250.png",     name:"Creatina Monohidratada Growth 250g", price:75000 },
+  { id:"cre-soldiers600",   category:"Creatinas",    icon:"pouch",image:"assets/cre-soldiers600.png",   name:"Creatina 600g Soldiers Nutrition 100% Pura", price:100000 },
+  { id:"pre-panic150",      category:"Pré-Entrenos", icon:"pouch",image:"assets/pre-panic150.png",      name:"Adaptogen Science Panic Pré Entreno con Creatina 150g", price:75000 },
+  { id:"pre-haze300",       category:"Pré-Entrenos", icon:"pouch",image:"assets/pre-haze300.png",       name:"Pré Entreno Haze Hardcore 300g Growth", price:160000 },
+  { id:"why-basic1kg",      category:"Whey Protein", icon:"pouch",image:"assets/why-basic1kg.png",      name:"Basic Whey 1kg Growth Supplements", price:130000 },
+  { id:"why-growth80-1kg",  category:"Whey Protein", icon:"pouch",image:"assets/why-growth80-1kg.png",  name:"Whey Protein Concentrado 80% 1kg Growth Supplements", price:370000 },
+  { id:"why-primal1kg",     category:"Whey Protein", icon:"pouch",image:"assets/why-primal1kg.png",     name:"Whey Protein Primal 1kg Soldiers Nutrition", price:160000 },
+  { id:"why-soldiers1kg",   category:"Whey Protein", icon:"pouch",image:"assets/why-soldiers1kg.png",   name:"Whey Protein Concentrado 1kg Soldiers Nutrition", price:400000 },
+  { id:"why-maxtitanium900",category:"Whey Protein", icon:"jar",  image:"assets/why-maxtitanium900.png",name:"100% Whey Protein Concentrado 900g Max Titanium", price:280000 },
 
   // Vitaminas Growth: precio en 0 = "a consultar" hasta que carguen el precio real.
   // Apenas tengan el precio, solo hay que cambiar el 0 por el número en guaraníes
   // y el producto pasa a mostrarse con precio + botón "Agregar al carrito" solo.
-  { id:"vit-omega3",     category:"Vitaminas", icon:"jar", name:"Omega 3 Growth Supplements", price:0 },
-  { id:"vit-multi",      category:"Vitaminas", icon:"jar", name:"Multivitamínico Growth Supplements", price:0 },
+  { id:"vit-omega3",     category:"Vitaminas", icon:"jar", image:"assets/vit-omega3.png",     name:"Omega 3 Growth Supplements", price:0 },
+  { id:"vit-multi",      category:"Vitaminas", icon:"jar", image:"assets/vit-multi.png",      name:"Multivitamínico Growth Supplements", price:0 },
   { id:"vit-zinc",       category:"Vitaminas", icon:"jar", name:"Zinc Growth Supplements", price:0 },
-  { id:"vit-colageno",   category:"Vitaminas", icon:"jar", name:"Colágeno Growth Supplements", price:0 },
+  { id:"vit-colageno",   category:"Vitaminas", icon:"jar", image:"assets/vit-colageno.png",   name:"Colágeno Growth Supplements", price:0 },
   { id:"vit-enzimas",    category:"Vitaminas", icon:"jar", name:"Enzimas Digestivas Growth Supplements", price:0 },
-  { id:"vit-melatonina", category:"Vitaminas", icon:"jar", name:"Melatonina Growth Supplements", price:0 }
+  { id:"vit-melatonina", category:"Vitaminas", icon:"jar", image:"assets/vit-melatonina.png", name:"Melatonina Growth Supplements", price:0 }
 ];
 
 // Orden en que se muestran las categorías, y su id de sección (para el menú)
@@ -413,7 +416,7 @@ function renderCatalog(){
       <div class="grid">
         ${items.map(p => `
           <div class="card">
-            <div class="card-media icon-wrap">${renderIcon(p.icon)}</div>
+            <div class="card-media icon-wrap">${p.image ? `<img src="${p.image}" alt="${p.name}" class="product-photo">` : renderIcon(p.icon)}</div>
             <div class="card-body">
               <div class="card-name">${p.name}</div>
               ${p.price > 0 ? `
