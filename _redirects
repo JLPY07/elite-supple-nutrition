@@ -1,0 +1,3 @@
+# Cualquiera que entre a elitesupplenutrition.netlify.app es mandado
+# automáticamente (301 = redirect permanente) a elitesupplenutrition.store
+https://elitesupplenutrition.netlify.app/*  https://elitesupplenutrition.store/:splat  301!
