@@ -237,12 +237,16 @@
       <div class="brand-name">ELITE <span style="color:var(--gold)">SUPPLE</span></div>
     </div>
     <div class="header-right">
+      <div class="currency-toggle" id="languageToggle">
+        <button data-lang="ES">ES</button>
+        <button data-lang="PT">PT</button>
+      </div>
       <div class="currency-toggle" id="currencyToggle">
         <button data-currency="PYG">₲ Gs</button>
         <button data-currency="BRL">R$ Real</button>
       </div>
       <button class="cart-btn" id="openCartBtn">
-        🛒 Carrito <span class="cart-count" id="cartCount">0</span>
+        🛒 <span id="cartLabel">Carrito</span> <span class="cart-count" id="cartCount">0</span>
       </button>
     </div>
   </div>
@@ -250,20 +254,20 @@
 
 <section class="hero">
   <h1>ELITE SUPPLE<br><span class="accent">NUTRITION</span></h1>
-  <p>Productos originales para tu entrenamiento. Elegí, armá tu pedido y confirmalo directo por WhatsApp.</p>
+  <p id="heroSubtitle">Productos originales para tu entrenamiento. Elegí, armá tu pedido y confirmalo directo por WhatsApp.</p>
   <div class="badges">
-    <div class="badge">✅ <b>100% originales</b></div>
-    <div class="badge">📦 <b>Por pedido</b></div>
-    <div class="badge">🚚 <b>Entrega en 3 a 5 días hábiles</b></div>
+    <div class="badge">✅ <b id="badge1Text">100% originales</b></div>
+    <div class="badge">📦 <b id="badge2Text">Por pedido</b></div>
+    <div class="badge">🚚 <b id="badge3Text">Entrega en 3 a 5 días hábiles</b></div>
   </div>
   <div class="currency-note" id="currencyNote"></div>
 </section>
 
 <nav class="cat-nav">
-  <a href="#creatinas">Creatinas</a>
-  <a href="#whey">Whey Protein</a>
-  <a href="#pre-entrenos">Pré-Entrenos</a>
-  <a href="#vitaminas">Vitaminas</a>
+  <a href="#creatinas" id="navCreatinas">Creatinas</a>
+  <a href="#whey" id="navWhey">Whey Protein</a>
+  <a href="#pre-entrenos" id="navPre">Pré-Entrenos</a>
+  <a href="#vitaminas" id="navVit">Vitaminas</a>
 </nav>
 
 <div id="categories"></div>
@@ -275,28 +279,96 @@
 <div class="overlay" id="overlay"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-header">
-    <h3>Tu pedido</h3>
+    <h3 id="drawerTitle">Tu pedido</h3>
     <button class="close-btn" id="closeDrawerBtn">✕</button>
   </div>
   <div class="drawer-items" id="drawerItems"></div>
   <div class="drawer-footer">
     <div class="total-row">
-      <span>Total</span>
+      <span id="totalLabel">Total</span>
       <span class="total-amount" id="totalAmount">Gs. 0</span>
     </div>
     <button class="checkout-btn" id="checkoutBtn" disabled>
       <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39a9.9 9.9 0 0 0 4.75 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8a8.1 8.1 0 0 1 8.1 8.11c0 4.47-3.63 8.1-8.1 8.1a8 8 0 0 1-4.1-1.12l-.29-.17-3.14.83.84-3.06-.19-.31a8.02 8.02 0 0 1-1.22-4.27 8.1 8.1 0 0 1 8.1-8.11m-4.38 4.15c-.15 0-.4.06-.62.3-.21.24-.82.8-.82 1.94s.83 2.24.95 2.4c.11.15 1.62 2.55 4 3.48 1.98.78 2.38.62 2.81.58.43-.04 1.38-.56 1.58-1.11.19-.54.19-1 .13-1.1-.06-.1-.22-.16-.46-.28-.24-.12-1.38-.68-1.6-.76-.21-.08-.37-.12-.53.12-.15.24-.6.76-.74.92-.14.16-.27.18-.51.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.35-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.53-1.3-.74-1.77-.19-.46-.39-.4-.53-.4Z"/></svg>
-      Finalizar pedido por WhatsApp
+      <span id="checkoutText">Finalizar pedido por WhatsApp</span>
     </button>
   </div>
 </div>
 
 <footer>
-  <div class="footer-note">Elite Supple Nutrition — suplementos que te acercan a tu mejor versión.</div>
-  <a class="wa-link" href="#" id="footerWhatsapp" target="_blank" rel="noopener">📱 +595 994 797 121 — Consultá y hacé tu pedido</a>
+  <div class="footer-note" id="footerNote">Elite Supple Nutrition — suplementos que te acercan a tu mejor versión.</div>
+  <a class="wa-link" href="#" id="footerWhatsapp" target="_blank" rel="noopener">📱 <span id="footerWhatsappText">+595 994 797 121 — Consultá y hacé tu pedido</span></a>
 </footer>
 
 <script>
+/* =========================================================================
+   TEXTOS DEL SITIO EN ESPAÑOL Y PORTUGUÉS
+   Cada clave es un pedacito de texto de la interfaz. Si querés cambiar
+   una palabra, buscala acá (en los dos idiomas) y editala directo.
+   ========================================================================= */
+const I18N = {
+  ES: {
+    heroSubtitle: "Productos originales para tu entrenamiento. Elegí, armá tu pedido y confirmalo directo por WhatsApp.",
+    badge1: "100% originales",
+    badge2: "Por pedido",
+    badge3: "Entrega en 3 a 5 días hábiles",
+    currencyNote: "Precios en guaraníes. Si venís de Brasil, tocá \"R$ Real\" arriba para verlos en reales.",
+    navCreatinas: "Creatinas",
+    navWhey: "Whey Protein",
+    navPre: "Pré-Entrenos",
+    navVit: "Vitaminas",
+    addToCart: "Agregar al carrito",
+    added: "¡Agregado! ✓",
+    consultPrice: "Consultar precio",
+    consultWhatsapp: "Consultar por WhatsApp",
+    cartLabel: "Carrito",
+    drawerTitle: "Tu pedido",
+    emptyCart: "Tu carrito está vacío.<br>Agregá productos del catálogo.",
+    total: "Total",
+    checkoutBtn: "Finalizar pedido por WhatsApp",
+    perUnit: "c/u",
+    remove: "Quitar",
+    footerNote: "Elite Supple Nutrition — suplementos que te acercan a tu mejor versión.",
+    footerWhatsapp: "+595 994 797 121 — Consultá y hacé tu pedido",
+    orderMsgIntro: "¡Hola! Quiero hacer un pedido desde la web:",
+    orderMsgName: "Mi nombre: ",
+    orderMsgCity: "Mi ciudad: ",
+    consultMsgPrefix: "¡Hola! Quiero consultar el precio de: ",
+    genericConsultMsg: "¡Hola! Quiero consultar sobre sus suplementos."
+  },
+  PT: {
+    heroSubtitle: "Produtos originais para o seu treino. Escolha, monte seu pedido e confirme direto pelo WhatsApp.",
+    badge1: "100% originais",
+    badge2: "Sob encomenda",
+    badge3: "Entrega em 3 a 5 dias úteis",
+    currencyNote: "Preços em reais. Se você é do Paraguai, toque em \"₲ Gs\" acima para ver em guaranis.",
+    navCreatinas: "Creatinas",
+    navWhey: "Whey Protein",
+    navPre: "Pré-Treinos",
+    navVit: "Vitaminas",
+    addToCart: "Adicionar ao carrinho",
+    added: "Adicionado! ✓",
+    consultPrice: "Consultar preço",
+    consultWhatsapp: "Consultar pelo WhatsApp",
+    cartLabel: "Carrinho",
+    drawerTitle: "Seu pedido",
+    emptyCart: "Seu carrinho está vazio.<br>Adicione produtos do catálogo.",
+    total: "Total",
+    checkoutBtn: "Finalizar pedido pelo WhatsApp",
+    perUnit: "cada",
+    remove: "Remover",
+    footerNote: "Elite Supple Nutrition — suplementos que te aproximam da sua melhor versão.",
+    footerWhatsapp: "+595 994 797 121 — Consulte e faça seu pedido",
+    orderMsgIntro: "Olá! Quero fazer um pedido pelo site:",
+    orderMsgName: "Meu nome: ",
+    orderMsgCity: "Minha cidade: ",
+    consultMsgPrefix: "Olá! Quero consultar o preço de: ",
+    genericConsultMsg: "Olá! Quero saber mais sobre os suplementos."
+  }
+};
+// Atajo: t("clave") devuelve el texto en el idioma activo en ese momento.
+function t(key){ return I18N[lang][key]; }
+
 /* =========================================================================
    CONFIGURACIÓN DEL NEGOCIO
    Todo lo que tu amigo necesite cambiar (número, productos, precios,
@@ -339,16 +411,17 @@ const PRODUCTS = [
 
 // Orden en que se muestran las categorías, y su id de sección (para el menú)
 const CATEGORY_ORDER = [
-  { name:"Creatinas",    slug:"creatinas" },
-  { name:"Whey Protein", slug:"whey" },
-  { name:"Pré-Entrenos", slug:"pre-entrenos" },
-  { name:"Vitaminas",    slug:"vitaminas" }
+  { name:"Creatinas",    slug:"creatinas",    labelKey:"navCreatinas" },
+  { name:"Whey Protein", slug:"whey",         labelKey:"navWhey" },
+  { name:"Pré-Entrenos", slug:"pre-entrenos", labelKey:"navPre" },
+  { name:"Vitaminas",    slug:"vitaminas",    labelKey:"navVit" }
 ];
 
 /* =========================================================================
    ESTADO DE LA APP
    ========================================================================= */
 let currency = "PYG"; // Arranca siempre en guaraníes. El cliente cambia a R$ con el switch de arriba si lo necesita.
+let lang = "ES"; // Arranca siempre en español. El cliente cambia a PT con el switch de arriba si lo necesita.
 let cart = {}; // { productId: cantidad }
 
 /* =========================================================================
@@ -408,7 +481,7 @@ function renderCatalog(){
     section.className = "category-section";
     section.id = cat.slug;
     section.innerHTML = `
-      <div class="category-title"><h2>${cat.name}</h2><div class="line"></div></div>
+      <div class="category-title"><h2>${t(cat.labelKey)}</h2><div class="line"></div></div>
       <div class="grid">
         ${items.map(p => `
           <div class="card">
@@ -419,12 +492,12 @@ function renderCatalog(){
                 <div class="card-prices">
                   <div class="price-main">${formatPrice(p.price)}</div>
                 </div>
-                <button class="add-btn" data-id="${p.id}">Agregar al carrito</button>
+                <button class="add-btn" data-id="${p.id}">${t("addToCart")}</button>
               ` : `
                 <div class="card-prices">
-                  <div class="price-main" style="font-size:14px;color:var(--muted)">Consultar precio</div>
+                  <div class="price-main" style="font-size:14px;color:var(--muted)">${t("consultPrice")}</div>
                 </div>
-                <button class="add-btn" data-consult="${p.name}">Consultar por WhatsApp</button>
+                <button class="add-btn" data-consult="${p.name}">${t("consultWhatsapp")}</button>
               `}
             </div>
           </div>
@@ -437,16 +510,16 @@ function renderCatalog(){
   container.querySelectorAll(".add-btn[data-id]").forEach(btn => {
     btn.addEventListener("click", () => {
       addToCart(btn.getAttribute("data-id"));
-      btn.textContent = "¡Agregado! ✓";
+      btn.textContent = t("added");
       btn.classList.add("added");
-      setTimeout(() => { btn.textContent = "Agregar al carrito"; btn.classList.remove("added"); }, 900);
+      setTimeout(() => { btn.textContent = t("addToCart"); btn.classList.remove("added"); }, 900);
     });
   });
 
   container.querySelectorAll(".add-btn[data-consult]").forEach(btn => {
     btn.addEventListener("click", () => {
       const productName = btn.getAttribute("data-consult");
-      const msg = encodeURIComponent(`¡Hola! Quiero consultar el precio de: ${productName}`);
+      const msg = encodeURIComponent(`${t("consultMsgPrefix")}${productName}`);
       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
     });
   });
@@ -489,7 +562,7 @@ function renderCart(){
 
   const ids = Object.keys(cart);
   if(ids.length === 0){
-    itemsEl.innerHTML = `<div class="empty-cart">Tu carrito está vacío.<br>Agregá productos del catálogo.</div>`;
+    itemsEl.innerHTML = `<div class="empty-cart">${t("emptyCart")}</div>`;
     checkoutBtn.disabled = true;
   } else {
     itemsEl.innerHTML = ids.map(id => {
@@ -499,12 +572,12 @@ function renderCart(){
         <div class="cart-item">
           <div style="flex:1">
             <div class="cart-item-name">${p.name}</div>
-            <div class="cart-item-price">${formatPrice(p.price)} c/u</div>
+            <div class="cart-item-price">${formatPrice(p.price)} ${t("perUnit")}</div>
             <div class="qty-controls">
               <button data-action="dec" data-id="${id}">−</button>
               <span>${qty}</span>
               <button data-action="inc" data-id="${id}">+</button>
-              <button class="remove-btn" data-action="remove" data-id="${id}">Quitar</button>
+              <button class="remove-btn" data-action="remove" data-id="${id}">${t("remove")}</button>
             </div>
           </div>
         </div>
@@ -532,16 +605,16 @@ function renderCart(){
    ya cargado. El cliente solo tiene que apretar "Enviar".
    ========================================================================= */
 function buildOrderMessage(){
-  const lines = ["¡Hola! Quiero hacer un pedido desde la web:", ""];
+  const lines = [t("orderMsgIntro"), ""];
   Object.entries(cart).forEach(([id, qty]) => {
     const p = PRODUCTS.find(pr => pr.id === id);
     lines.push(`• ${p.name} x${qty} — ${formatPrice(p.price * qty)}`);
   });
   lines.push("");
-  lines.push(`Total: ${formatPrice(cartTotalPYG())}`);
+  lines.push(`${t("total")}: ${formatPrice(cartTotalPYG())}`);
   lines.push("");
-  lines.push("Mi nombre: ");
-  lines.push("Mi ciudad: ");
+  lines.push(t("orderMsgName"));
+  lines.push(t("orderMsgCity"));
   return lines.join("\n");
 }
 function checkout(){
@@ -564,20 +637,49 @@ function closeDrawer(){
 
 function setCurrency(newCurrency){
   currency = newCurrency;
-  document.querySelectorAll(".currency-toggle button").forEach(btn => {
+  document.querySelectorAll("#currencyToggle button").forEach(btn => {
     btn.classList.toggle("active", btn.getAttribute("data-currency") === currency);
   });
   renderCatalog();
   renderCart();
 }
 
+function setLanguage(newLang){
+  lang = newLang;
+  document.querySelectorAll("#languageToggle button").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
+  });
+  applyStaticTexts();
+  renderCatalog();
+  renderCart();
+}
+
+function applyStaticTexts(){
+  document.getElementById("heroSubtitle").textContent = t("heroSubtitle");
+  document.getElementById("badge1Text").textContent = t("badge1");
+  document.getElementById("badge2Text").textContent = t("badge2");
+  document.getElementById("badge3Text").textContent = t("badge3");
+  document.getElementById("navCreatinas").textContent = t("navCreatinas");
+  document.getElementById("navWhey").textContent = t("navWhey");
+  document.getElementById("navPre").textContent = t("navPre");
+  document.getElementById("navVit").textContent = t("navVit");
+  document.getElementById("cartLabel").textContent = t("cartLabel");
+  document.getElementById("drawerTitle").textContent = t("drawerTitle");
+  document.getElementById("totalLabel").textContent = t("total");
+  document.getElementById("checkoutText").textContent = t("checkoutBtn");
+  document.getElementById("footerNote").textContent = t("footerNote");
+  document.getElementById("footerWhatsappText").textContent = t("footerWhatsapp");
+  updateCurrencyNote();
+  setupGeneralWhatsappLinks();
+}
+
 function updateCurrencyNote(){
   const note = document.getElementById("currencyNote");
-  note.textContent = "Precios en guaraníes. Si venís de Brasil, tocá \"R$ Real\" arriba para verlos en reales.";
+  note.textContent = t("currencyNote");
 }
 
 function setupGeneralWhatsappLinks(){
-  const genericMsg = encodeURIComponent("¡Hola! Quiero consultar sobre sus suplementos.");
+  const genericMsg = encodeURIComponent(t("genericConsultMsg"));
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${genericMsg}`;
   document.getElementById("fabWhatsapp").href = url;
   document.getElementById("footerWhatsapp").href = url;
@@ -587,9 +689,14 @@ function setupGeneralWhatsappLinks(){
    INIT
    ========================================================================= */
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".currency-toggle button").forEach(btn => {
+  document.querySelectorAll("#currencyToggle button").forEach(btn => {
     btn.classList.toggle("active", btn.getAttribute("data-currency") === currency);
     btn.addEventListener("click", () => setCurrency(btn.getAttribute("data-currency")));
+  });
+
+  document.querySelectorAll("#languageToggle button").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
+    btn.addEventListener("click", () => setLanguage(btn.getAttribute("data-lang")));
   });
 
   document.getElementById("openCartBtn").addEventListener("click", openDrawer);
@@ -597,8 +704,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("overlay").addEventListener("click", closeDrawer);
   document.getElementById("checkoutBtn").addEventListener("click", checkout);
 
-  setupGeneralWhatsappLinks();
-  updateCurrencyNote();
+  applyStaticTexts();
   renderCatalog();
   renderCart();
 });
