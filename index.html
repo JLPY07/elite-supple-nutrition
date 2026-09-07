@@ -348,7 +348,7 @@ const CATEGORY_ORDER = [
 /* =========================================================================
    ESTADO DE LA APP
    ========================================================================= */
-let currency = detectDefaultCurrency(); // "PYG" o "BRL"
+let currency = "PYG"; // Arranca siempre en guaraníes. El cliente cambia a R$ con el switch de arriba si lo necesita.
 let cart = {}; // { productId: cantidad }
 
 /* =========================================================================
@@ -357,15 +357,11 @@ let cart = {}; // { productId: cantidad }
    arrancamos en reales. Si no, en guaraníes. El usuario SIEMPRE puede
    tocar el switch de arriba para cambiarlo manualmente.
    ========================================================================= */
-function detectDefaultCurrency(){
-  try{
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-    if (tz.includes("Sao_Paulo") || tz.includes("Brazil")) return "BRL";
-  }catch(e){ /* ignorar si el navegador no soporta Intl */ }
-  const lang = (navigator.language || "").toLowerCase();
-  if (lang.startsWith("pt")) return "BRL";
-  return "PYG";
-}
+/* Nota de ingeniería: antes acá había una función que adivinaba la moneda
+   por huso horario/idioma del navegador. La sacamos porque en zona de
+   frontera daba falsos positivos (celulares paraguayos detectados como
+   brasileños) y confundía a los clientes. Mejor un default fijo + control
+   manual siempre visible. */
 
 /* =========================================================================
    FORMATO DE PRECIOS
@@ -422,7 +418,6 @@ function renderCatalog(){
               ${p.price > 0 ? `
                 <div class="card-prices">
                   <div class="price-main">${formatPrice(p.price)}</div>
-                  <div class="price-sub">${formatSecondaryPrice(p.price)}</div>
                 </div>
                 <button class="add-btn" data-id="${p.id}">Agregar al carrito</button>
               ` : `
@@ -578,9 +573,7 @@ function setCurrency(newCurrency){
 
 function updateCurrencyNote(){
   const note = document.getElementById("currencyNote");
-  note.textContent = currency === "BRL"
-    ? "Detectamos que podrías estar en Brasil — mostrando precios en reales. Cambiá a Gs. arriba si preferís."
-    : "Mostrando precios en guaraníes. Si venís de Brasil, tocá \"R$ Real\" arriba.";
+  note.textContent = "Precios en guaraníes. Si venís de Brasil, tocá \"R$ Real\" arriba para verlos en reales.";
 }
 
 function setupGeneralWhatsappLinks(){
