@@ -260,7 +260,6 @@
     <div class="badge">📦 <b id="badge2Text">Por pedido</b></div>
     <div class="badge">🚚 <b id="badge3Text">Entrega en 3 a 5 días hábiles</b></div>
   </div>
-  <div class="currency-note" id="currencyNote"></div>
 </section>
 
 <nav class="cat-nav">
@@ -669,13 +668,7 @@ function applyStaticTexts(){
   document.getElementById("checkoutText").textContent = t("checkoutBtn");
   document.getElementById("footerNote").textContent = t("footerNote");
   document.getElementById("footerWhatsappText").textContent = t("footerWhatsapp");
-  updateCurrencyNote();
   setupGeneralWhatsappLinks();
-}
-
-function updateCurrencyNote(){
-  const note = document.getElementById("currencyNote");
-  note.textContent = t("currencyNote");
 }
 
 function setupGeneralWhatsappLinks(){
