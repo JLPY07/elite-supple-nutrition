@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Marca la página como "con JavaScript activo". Los estilos de animación dependen de esto,
+     así si el JS falla el contenido sigue visible. -->
+<script>document.documentElement.classList.add("js");</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catálogo de Suplementos</title>
+<title>Elite Supple Nutrition</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+<link rel="shortcut icon" href="assets/favicon.ico">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0d0c0a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -152,6 +160,36 @@
     width:100%; height:100%; object-fit:contain; padding:12px;
   }
 
+  /* ---------- Ofertas ---------- */
+  .card-media.is-photo{height:260px; background:#000;}
+  .card-media.is-photo .product-photo{padding:0; object-fit:cover; object-position:center 30%;}
+  .offer-badge{
+    position:absolute; top:10px; left:10px; z-index:2;
+    background:linear-gradient(135deg,#ff3d00,#ee5a24); color:#fff;
+    font-family:'Anton',sans-serif; letter-spacing:.5px; font-size:13px;
+    padding:5px 10px; border-radius:6px; box-shadow:0 4px 14px rgba(255,61,0,.45);
+  }
+  .tag-badge{
+    position:absolute; top:10px; right:10px; z-index:2;
+    background:rgba(13,12,10,.85); color:var(--gold-light); border:1px solid var(--gold);
+    font-size:11px; font-weight:700; padding:4px 8px; border-radius:6px;
+  }
+  .price-old{font-size:13px; color:var(--muted); text-decoration:line-through; margin-bottom:2px;}
+  .price-main.is-offer{color:#ff8a5c; font-size:24px;}
+  .category-section.is-offers .category-title h2{color:var(--gold-light);}
+  .card.is-offer{border-color:var(--gold); box-shadow:0 0 0 1px rgba(238,90,36,.25), 0 10px 30px rgba(238,90,36,.12);}
+
+  /* ---------- Redes sociales ---------- */
+  .social-links{display:flex; gap:10px; flex-wrap:wrap;}
+  .social-links a{
+    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+    color:var(--gold-light); border:1px solid var(--border); background:var(--panel);
+    padding:9px 14px; border-radius:999px; font-size:13px; font-weight:600;
+    transition:border-color .2s ease, color .2s ease, transform .2s ease;
+  }
+  .social-links a:hover{border-color:var(--gold); color:#fff; transform:translateY(-2px);}
+  .social-links--hero{margin-top:16px;}
+
   /* ---------- Footer ---------- */
   footer{
     max-width:1100px; margin:56px auto 0; padding:28px 20px 40px;
@@ -171,6 +209,12 @@
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 6px 18px rgba(0,0,0,0.4); text-decoration:none;
   }
+
+  /* Instagram y TikTok flotantes, apilados arriba del botón de WhatsApp */
+  .fab-social{width:48px; height:48px; right:24px; transition:transform .2s ease;}
+  .fab-social:hover{transform:scale(1.1);}
+  .fab-ig{bottom:88px; background:linear-gradient(45deg,#f09433,#dc2743 50%,#bc1888);}
+  .fab-tt{bottom:144px; background:#000; border:1px solid #444;}
 
   /* ---------- Cart Drawer ---------- */
   .overlay{
@@ -226,9 +270,120 @@
   @media (max-width:520px){
     .header-inner{flex-wrap:wrap;}
   }
+
+  /* =====================================================================
+     ANIMACIONES AL SCROLL
+     Idea central: los elementos con la clase .reveal arrancan invisibles
+     y un IntersectionObserver (en el JS) les agrega .in-view cuando entran
+     en pantalla. Ahí se dispara la animación.
+     Todo vive bajo ".js" para que, si el JavaScript falla, el sitio se
+     vea normal en vez de quedar con todo invisible.
+     ===================================================================== */
+
+  /* --- Aparición base: sube desde abajo con fade --- */
+  .js .reveal{opacity:0;}
+  .js .reveal.in-view{
+    opacity:1;
+    /* "backwards" mantiene el estado inicial durante el delay y, al terminar,
+       suelta el control: así el :hover de las tarjetas sigue funcionando. */
+    animation:revealUp .8s cubic-bezier(.2,.7,.2,1) backwards;
+    animation-delay:var(--d,0ms);
+  }
+  .js .reveal--left.in-view{animation-name:revealLeft;}
+  .js .reveal--zoom.in-view{animation-name:revealZoom;}
+  .js .reveal.in-view.no-anim{animation:none;}
+
+  @keyframes revealUp{
+    from{opacity:0; transform:translateY(34px);}
+    to  {opacity:1; transform:translateY(0);}
+  }
+  @keyframes revealLeft{
+    from{opacity:0; transform:translateX(-30px);}
+    to  {opacity:1; transform:translateX(0);}
+  }
+  @keyframes revealZoom{
+    from{opacity:0; transform:scale(.9);}
+    to  {opacity:1; transform:scale(1);}
+  }
+
+  /* --- La línea del título de cada sección se "dibuja" de izquierda a derecha --- */
+  .js .category-title .line{
+    transform:scaleX(0); transform-origin:left;
+    transition:transform 1s cubic-bezier(.2,.7,.2,1) .25s;
+  }
+  .js .category-title.in-view .line{transform:scaleX(1);}
+  .js .category-title.no-anim .line{transition:none;}
+
+  /* --- Header: se compacta y gana sombra al bajar --- */
+  header{transition:box-shadow .3s ease, background .3s ease;}
+  .header-inner{transition:padding .3s ease;}
+  .brand-mark-img{transition:width .3s ease, height .3s ease;}
+  header.scrolled{
+    box-shadow:0 8px 24px rgba(0,0,0,.45);
+    background:rgba(13,12,10,.97);
+  }
+  header.scrolled .header-inner{padding-top:8px; padding-bottom:8px;}
+  header.scrolled .brand-mark-img{width:30px; height:30px;}
+
+  /* --- Barra de progreso de lectura (línea naranja arriba de todo) --- */
+  .scroll-progress{
+    position:fixed; top:0; left:0; width:100%; height:3px; z-index:55;
+    background:linear-gradient(90deg,var(--gold),var(--gold-light));
+    transform:scaleX(0); transform-origin:left; pointer-events:none;
+  }
+
+  /* --- Resplandor naranja del hero (se mueve más lento que el scroll = parallax) --- */
+  .hero{position:relative;}
+  .hero > *:not(.hero-glow){position:relative; z-index:1;}
+  .hero-glow{
+    position:absolute; right:0; top:-40px; z-index:0; pointer-events:none;
+    width:min(460px,90vw); height:min(460px,90vw);
+    background:radial-gradient(closest-side, rgba(238,90,36,.26), rgba(238,90,36,0));
+    will-change:transform;
+  }
+
+  /* --- Tarjetas: se levantan al pasar el mouse y la foto hace zoom --- */
+  .card{
+    transition:transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s ease, box-shadow .35s ease;
+  }
+  .card:hover{
+    transform:translateY(-6px);
+    border-color:var(--gold);
+    box-shadow:0 14px 30px rgba(0,0,0,.45), 0 0 0 1px rgba(238,90,36,.25);
+  }
+  .product-photo{transition:transform .5s cubic-bezier(.2,.7,.2,1);}
+  .card:hover .product-photo{transform:scale(1.08);}
+
+  /* --- Contador del carrito: "salta" cuando agregás algo --- */
+  .cart-count.bump{animation:bump .45s ease;}
+  @keyframes bump{
+    0%{transform:scale(1);} 40%{transform:scale(1.6);} 100%{transform:scale(1);}
+  }
+
+  /* --- Scroll suave al tocar el menú de categorías, y que el título de la
+         sección no quede tapado por el header fijo --- */
+  html{scroll-behavior:smooth;}
+  .category-section{scroll-margin-top:72px;}
+
+  /* --- Accesibilidad: si la persona tiene activado "reducir movimiento" en su
+         celular/PC, se apagan las animaciones y todo se ve directo --- */
+  @media (prefers-reduced-motion: reduce){
+    .js .reveal{opacity:1;}
+    .js .reveal.in-view,
+    .js .reveal--left.in-view,
+    .js .reveal--zoom.in-view{animation:none;}
+    .js .category-title .line{transform:none; transition:none;}
+    .card, .product-photo, header, .header-inner, .brand-mark-img{transition:none;}
+    .card:hover, .card:hover .product-photo{transform:none;}
+    .cart-count.bump{animation:none;}
+    .hero-glow{transform:none !important;}
+    html{scroll-behavior:auto;}
+  }
 </style>
 </head>
 <body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <header>
   <div class="header-inner">
@@ -253,20 +408,22 @@
 </header>
 
 <section class="hero">
-  <h1>ELITE SUPPLE<br><span class="accent">NUTRITION</span></h1>
-  <p id="heroSubtitle">Productos originales para tu entrenamiento. Elegí, armá tu pedido y confirmalo directo por WhatsApp.</p>
+  <div class="hero-glow" id="heroGlow"></div>
+  <h1 class="reveal" style="--d:0ms">ELITE SUPPLE<br><span class="accent">NUTRITION</span></h1>
+  <p class="reveal" style="--d:140ms" id="heroSubtitle">Productos originales para tu entrenamiento. Elegí, armá tu pedido y confirmalo directo por WhatsApp.</p>
   <div class="badges">
-    <div class="badge">✅ <b id="badge1Text">100% originales</b></div>
-    <div class="badge">📦 <b id="badge2Text">Por pedido</b></div>
-    <div class="badge">🚚 <b id="badge3Text">Entrega en 3 a 5 días hábiles</b></div>
+    <div class="badge reveal reveal--zoom" style="--d:260ms">✅ <b id="badge1Text">100% originales</b></div>
+    <div class="badge reveal reveal--zoom" style="--d:340ms">📦 <b id="badge2Text">Por pedido</b></div>
+    <div class="badge reveal reveal--zoom" style="--d:420ms">🚚 <b id="badge3Text">Entrega en 3 a 5 días hábiles</b></div>
   </div>
 </section>
 
 <nav class="cat-nav">
-  <a href="#creatinas" id="navCreatinas">Creatinas</a>
-  <a href="#whey" id="navWhey">Whey Protein</a>
-  <a href="#pre-entrenos" id="navPre">Pré-Entrenos</a>
-  <a href="#vitaminas" id="navVit">Vitaminas</a>
+  <a class="reveal reveal--zoom" style="--d:440ms" href="#ofertas" id="navOfertas">🔥 Ofertas</a>
+  <a class="reveal reveal--zoom" style="--d:500ms" href="#creatinas" id="navCreatinas">Creatinas</a>
+  <a class="reveal reveal--zoom" style="--d:560ms" href="#whey" id="navWhey">Whey Protein</a>
+  <a class="reveal reveal--zoom" style="--d:620ms" href="#pre-entrenos" id="navPre">Pré-Entrenos</a>
+  <a class="reveal reveal--zoom" style="--d:680ms" href="#vitaminas" id="navVit">Vitaminas</a>
 </nav>
 
 <div id="categories"></div>
@@ -274,6 +431,9 @@
 <a class="fab" id="fabWhatsapp" href="#" target="_blank" rel="noopener" title="Consultar por WhatsApp">
   <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39a9.9 9.9 0 0 0 4.75 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.8a8.1 8.1 0 0 1 8.1 8.11c0 4.47-3.63 8.1-8.1 8.1a8 8 0 0 1-4.1-1.12l-.29-.17-3.14.83.84-3.06-.19-.31a8.02 8.02 0 0 1-1.22-4.27 8.1 8.1 0 0 1 8.1-8.11m-4.38 4.15c-.15 0-.4.06-.62.3-.21.24-.82.8-.82 1.94s.83 2.24.95 2.4c.11.15 1.62 2.55 4 3.48 1.98.78 2.38.62 2.81.58.43-.04 1.38-.56 1.58-1.11.19-.54.19-1 .13-1.1-.06-.1-.22-.16-.46-.28-.24-.12-1.38-.68-1.6-.76-.21-.08-.37-.12-.53.12-.15.24-.6.76-.74.92-.14.16-.27.18-.51.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.35-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.53-1.3-.74-1.77-.19-.46-.39-.4-.53-.4Z"/></svg>
 </a>
+
+<a class="fab fab-social fab-ig" href="https://www.instagram.com/elitesupple" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff" stroke="none"/></svg></a>
+<a class="fab fab-social fab-tt" href="https://www.tiktok.com/@elitesupple" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" width="24" height="24" fill="#fff" aria-hidden="true"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9a7.4 7.4 0 0 0 4.3 1.4V7.3a4.3 4.3 0 0 1-3.2-1.5Z"/></svg></a>
 
 <div class="overlay" id="overlay"></div>
 <div class="drawer" id="drawer">
@@ -297,6 +457,10 @@
 <footer>
   <div class="footer-note" id="footerNote">Elite Supple Nutrition — suplementos que te acercan a tu mejor versión.</div>
   <a class="wa-link" href="#" id="footerWhatsapp" target="_blank" rel="noopener">📱 <span id="footerWhatsappText">+595 994 797 121 — Consultá y hacé tu pedido</span></a>
+  <div class="social-links">
+    <a href="https://www.instagram.com/elitesupple" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Instagram</span></a>
+    <a href="https://www.tiktok.com/@elitesupple" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9a7.4 7.4 0 0 0 4.3 1.4V7.3a4.3 4.3 0 0 1-3.2-1.5Z"/></svg><span>TikTok</span></a>
+  </div>
 </footer>
 
 <script>
@@ -312,6 +476,9 @@ const I18N = {
     badge2: "Por pedido",
     badge3: "Entrega en 3 a 5 días hábiles",
     currencyNote: "Precios en guaraníes. Si venís de Brasil, tocá \"R$ Real\" arriba para verlos en reales.",
+    navOfertas: "🔥 Ofertas",
+    lastUnit: "Última unidad",
+    offerLabel: "OFERTA",
     navCreatinas: "Creatinas",
     navWhey: "Whey Protein",
     navPre: "Pré-Entrenos",
@@ -341,6 +508,9 @@ const I18N = {
     badge2: "Sob encomenda",
     badge3: "Entrega em 3 a 5 dias úteis",
     currencyNote: "Preços em reais. Se você é do Paraguai, toque em \"₲ Gs\" acima para ver em guaranis.",
+    navOfertas: "🔥 Ofertas",
+    lastUnit: "Última unidade",
+    offerLabel: "OFERTA",
     navCreatinas: "Creatinas",
     navWhey: "Whey Protein",
     navPre: "Pré-Treinos",
@@ -385,7 +555,27 @@ const PYG_PER_BRL = 1180;
 // Catálogo de productos. Para agregar uno nuevo, copiá un objeto y cambiá
 // los datos. El precio SIEMPRE se carga en guaraníes (price); el real se
 // calcula solo con PYG_PER_BRL.
+// Campos opcionales:
+//   oldPrice : precio anterior en guaraníes. Si existe, el producto es una OFERTA
+//              (precio viejo tachado + etiqueta con el % de descuento) y aparece en "Ofertas".
+//   photo    : true si la imagen es una foto real rectangular (se muestra a todo ancho).
+//   tag      : "lastUnit" muestra la etiqueta "Última unidad".
+//   namePT   : nombre en portugués (si no se pone, se usa name).
+// Para sacar una oferta: borrá la línea del producto (o el oldPrice, y cambiá la category).
 const PRODUCTS = [
+  // ---- OFERTAS (category "Ofertas") ----
+  { id:"promo-soldiers-basic", category:"Ofertas", icon:"pouch", image:"assets/promo-soldiers-basic.jpg", photo:true,
+    name:"Combo: Creatina Soldiers 600g + Whey Basic Growth 1kg", namePT:"Combo: Creatina Soldiers 600g + Whey Basic Growth 1kg",
+    price:215000, oldPrice:250000 },
+  { id:"promo-profit-shaker", category:"Ofertas", icon:"pouch", image:"assets/promo-profit-shaker.jpg", photo:true,
+    name:"Whey Profit Isolate Protein Mix 900g (32g de proteína) + Shaker de regalo", namePT:"Whey Profit Isolate Protein Mix 900g (32g de proteína) + Shaker de brinde",
+    price:138000, oldPrice:160000 },
+
+  // ---- Productos nuevos ----
+  { id:"cre-dark600", category:"Creatinas", icon:"pouch", image:"assets/cre-dark600.jpg", photo:true, name:"Creatina Pure 600g Dark Lab", price:120000 },
+  { id:"cre-universal", category:"Creatinas", icon:"jar", image:"assets/cre-universal.jpg", photo:true, name:"Creatina Monohidratada Universal Nutrition", price:75000, tag:"lastUnit" },
+  { id:"why-isolate900", category:"Whey Protein", icon:"pouch", image:"assets/of-isolate900.jpg", photo:true, name:"Isolate Protein Mix 900g Profit Laboratórios", price:135000 },
+
   { id:"cre-max300",        category:"Creatinas",    icon:"jar",  image:"assets/cre-max300.png",       name:"Creatina Monohidratada Max Titanium 300g", price:180000 },
   { id:"cre-growth250",     category:"Creatinas",    icon:"jar",  image:"assets/cre-growth250.png",     name:"Creatina Monohidratada Growth 250g", price:75000 },
   { id:"cre-soldiers600",   category:"Creatinas",    icon:"pouch",image:"assets/cre-soldiers600.png",   name:"Creatina 600g Soldiers Nutrition 100% Pura", price:100000 },
@@ -410,6 +600,7 @@ const PRODUCTS = [
 
 // Orden en que se muestran las categorías, y su id de sección (para el menú)
 const CATEGORY_ORDER = [
+  { name:"Ofertas",      slug:"ofertas",      labelKey:"navOfertas" },
   { name:"Creatinas",    slug:"creatinas",    labelKey:"navCreatinas" },
   { name:"Whey Protein", slug:"whey",         labelKey:"navWhey" },
   { name:"Pré-Entrenos", slug:"pre-entrenos", labelKey:"navPre" },
@@ -450,6 +641,10 @@ function formatBRL(n){
 function formatPrice(pygPrice){
   return currency === "BRL" ? formatBRL(toBRL(pygPrice)) : formatPYG(pygPrice);
 }
+// Nombre del producto según el idioma activo
+function pname(p){ return (lang === "PT" && p.namePT) ? p.namePT : p.name; }
+function discountPct(p){ return p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0; }
+
 function formatSecondaryPrice(pygPrice){
   return currency === "BRL" ? formatPYG(pygPrice) : formatBRL(toBRL(pygPrice));
 }
@@ -467,6 +662,67 @@ function renderIcon(type){
 }
 
 /* =========================================================================
+   ANIMACIONES AL SCROLL
+   1) IntersectionObserver: avisa cuando un elemento .reveal entra en pantalla
+      y le pone la clase .in-view (el CSS hace el resto).
+   2) Un handler de scroll liviano (throttled con requestAnimationFrame) que
+      maneja el header compacto, la barra de progreso y el parallax del hero.
+   ========================================================================= */
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let catalogAlreadyAnimated = false;
+let revealObserver = null;
+
+if ("IntersectionObserver" in window && !prefersReducedMotion) {
+  revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("in-view");
+        revealObserver.unobserve(entry.target); // una sola vez por elemento
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+}
+
+// Busca los .reveal dentro de "root" y los anima al entrar en pantalla.
+// Con instant=true los muestra de una, sin animación.
+function observeReveals(root, instant){
+  root.querySelectorAll(".reveal:not(.in-view)").forEach(el => {
+    if (instant || !revealObserver) {
+      el.classList.add("in-view", "no-anim");
+    } else {
+      revealObserver.observe(el);
+    }
+  });
+}
+
+function setupScrollEffects(){
+  const header = document.querySelector("header");
+  const bar = document.getElementById("scrollProgress");
+  const glow = document.getElementById("heroGlow");
+  let ticking = false;
+
+  function update(){
+    const y = window.scrollY || 0;
+    header.classList.toggle("scrolled", y > 24);
+
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? Math.min(y / max, 1) : 0})`;
+
+    if (!prefersReducedMotion) {
+      // El resplandor baja a 25% de la velocidad del scroll => efecto parallax
+      glow.style.transform = `translateY(${Math.min(y * 0.25, 160)}px)`;
+    }
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+  window.addEventListener("resize", update);
+  update();
+}
+
+/* =========================================================================
    RENDER: catálogo
    ========================================================================= */
 function renderCatalog(){
@@ -477,26 +733,31 @@ function renderCatalog(){
     if(items.length === 0) return;
 
     const section = document.createElement("section");
-    section.className = "category-section";
+    section.className = "category-section" + (cat.slug === "ofertas" ? " is-offers" : "");
     section.id = cat.slug;
     section.innerHTML = `
-      <div class="category-title"><h2>${t(cat.labelKey)}</h2><div class="line"></div></div>
+      <div class="category-title reveal reveal--left"><h2>${t(cat.labelKey)}</h2><div class="line"></div></div>
       <div class="grid">
-        ${items.map(p => `
-          <div class="card">
-            <div class="card-media icon-wrap">${p.image ? `<img src="${p.image}" alt="${p.name}" class="product-photo">` : renderIcon(p.icon)}</div>
+        ${items.map((p, i) => `
+          <div class="card reveal${p.oldPrice ? " is-offer" : ""}" style="--d:${(i % 4) * 90}ms">
+            <div class="card-media icon-wrap${p.photo ? " is-photo" : ""}">
+              ${p.oldPrice ? `<span class="offer-badge">${t("offerLabel")} -${discountPct(p)}%</span>` : ""}
+              ${p.tag ? `<span class="tag-badge">${t(p.tag)}</span>` : ""}
+              ${p.image ? `<img src="${p.image}" alt="${pname(p)}" class="product-photo" loading="lazy">` : renderIcon(p.icon)}
+            </div>
             <div class="card-body">
-              <div class="card-name">${p.name}</div>
+              <div class="card-name">${pname(p)}</div>
               ${p.price > 0 ? `
                 <div class="card-prices">
-                  <div class="price-main">${formatPrice(p.price)}</div>
+                  ${p.oldPrice ? `<div class="price-old">${formatPrice(p.oldPrice)}</div>` : ""}
+                  <div class="price-main${p.oldPrice ? " is-offer" : ""}">${formatPrice(p.price)}</div>
                 </div>
                 <button class="add-btn" data-id="${p.id}">${t("addToCart")}</button>
               ` : `
                 <div class="card-prices">
                   <div class="price-main" style="font-size:14px;color:var(--muted)">${t("consultPrice")}</div>
                 </div>
-                <button class="add-btn" data-consult="${p.name}">${t("consultWhatsapp")}</button>
+                <button class="add-btn" data-consult="${pname(p)}">${t("consultWhatsapp")}</button>
               `}
             </div>
           </div>
@@ -505,6 +766,12 @@ function renderCatalog(){
     `;
     container.appendChild(section);
   });
+
+  // Animaciones: la PRIMERA vez las tarjetas aparecen al hacer scroll.
+  // Si el catálogo se vuelve a dibujar (por cambiar moneda o idioma) aparecen
+  // directo, sin repetir la animación, para que no moleste.
+  observeReveals(container, catalogAlreadyAnimated);
+  catalogAlreadyAnimated = true;
 
   container.querySelectorAll(".add-btn[data-id]").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -530,6 +797,11 @@ function renderCatalog(){
 function addToCart(id){
   cart[id] = (cart[id] || 0) + 1;
   renderCart();
+  // "Salto" del numerito del carrito (se reinicia la animación cada vez)
+  const countEl = document.getElementById("cartCount");
+  countEl.classList.remove("bump");
+  void countEl.offsetWidth; // fuerza al navegador a reiniciar la animación
+  countEl.classList.add("bump");
 }
 function changeQty(id, delta){
   if(!cart[id]) return;
@@ -570,7 +842,7 @@ function renderCart(){
       return `
         <div class="cart-item">
           <div style="flex:1">
-            <div class="cart-item-name">${p.name}</div>
+            <div class="cart-item-name">${pname(p)}</div>
             <div class="cart-item-price">${formatPrice(p.price)} ${t("perUnit")}</div>
             <div class="qty-controls">
               <button data-action="dec" data-id="${id}">−</button>
@@ -607,7 +879,7 @@ function buildOrderMessage(){
   const lines = [t("orderMsgIntro"), ""];
   Object.entries(cart).forEach(([id, qty]) => {
     const p = PRODUCTS.find(pr => pr.id === id);
-    lines.push(`• ${p.name} x${qty} — ${formatPrice(p.price * qty)}`);
+    lines.push(`• ${pname(p)} x${qty} — ${formatPrice(p.price * qty)}`);
   });
   lines.push("");
   lines.push(`${t("total")}: ${formatPrice(cartTotalPYG())}`);
@@ -658,6 +930,7 @@ function applyStaticTexts(){
   document.getElementById("badge1Text").textContent = t("badge1");
   document.getElementById("badge2Text").textContent = t("badge2");
   document.getElementById("badge3Text").textContent = t("badge3");
+  document.getElementById("navOfertas").textContent = t("navOfertas");
   document.getElementById("navCreatinas").textContent = t("navCreatinas");
   document.getElementById("navWhey").textContent = t("navWhey");
   document.getElementById("navPre").textContent = t("navPre");
@@ -700,6 +973,10 @@ document.addEventListener("DOMContentLoaded", () => {
   applyStaticTexts();
   renderCatalog();
   renderCart();
+
+  // Animaciones al scroll: primero los elementos fijos (hero, menú), después el efecto de scroll
+  observeReveals(document, false);
+  setupScrollEffects();
 });
 </script>
 </body>
